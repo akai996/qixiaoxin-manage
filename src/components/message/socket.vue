@@ -79,6 +79,10 @@
             websocketClose(e) {  //关闭
                 console.log("websocket连接关闭")
                 this.is_open_socket = false;
+                if(this.manMade){
+                    console.log("页面关闭连接，不进行重连");
+                    return;
+                }
 				clearInterval(this.heartbeatInterval)
 				if (this.connectNum < 10) {
 					this.manMade = false
@@ -143,6 +147,12 @@
         },
         created() {
             this.initWebSocket()
+        },
+        beforeDestroy() {
+            this.close();
+            this.manMade =true;
+            clearInterval(this.heartbeatInterval);
+            clearTimeout(this.reconnectTimeOut);
         }
     }
 </script>
