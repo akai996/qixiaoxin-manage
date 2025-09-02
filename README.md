@@ -56,9 +56,9 @@ Raingad-IM是一个开源的即时通信demo，需要前后端配合使用，主
 
 前端技术栈：`vue2+Lemon-IMUI+element-UI`
 
-桌面端：`vue2+Lemon-IMUI+element-UI + electron`
+桌面端：`vue2+Lemon-IMUI+element-UI + electron` [联系作者，捐赠获取]
 
-移动端：`uniapp for vue3 + pinia`
+移动端：`uniapp for vue3 + pinia`[联系作者，捐赠获取]
 
 ### 安装教程
 1.  克隆代码到本地： 
@@ -86,55 +86,6 @@ npm run build
 
 6. 将打包好的文件(dist目录)里面的所有文件覆盖到后端的public目录下即可。
 
-### 音视频通话组件
-> 新的音视频通话组件已上线，完全开源，纯原生webrtc实现，不依赖任何第三方通讯组件，可以和移动端进行互通，这里就不在介绍了，自己看源码，下面将介绍旧版的音视频组件，采用的是peerjs组件。
-
-> peer音视频通话是一个独立的组件（@/components/message/webrtc/peer.vue），仅支持点对点通话，JS部分已加密且未开源，仅用于效果展示和学习，也可以将组件用到其他项目，但是依赖于element-ui。如果需要未加密源码，请进行捐赠并向作者（进交流群）索取未加密的源码，捐赠金额：200元/次！
-
-#### 使用方法
-
-引入组件
-``` javascript
-//组件依赖于peerjs，需要在index.html中引入
-
- <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
-
-// 在需要用到组件的地方导入组件，最好是全局的
-import webrtc from "@/components/webrtc";
-```
-
-注册组件
-
-``` javascript
-export default {
-  name: "app",
-  components: {
-    webrtc
-  },
-```
-使用组件
-``` javascript
-<webrtc :contact="currentChat" :config="webrtcConfig" alias="raingad" :userInfo="user" ref="webrtc" :key="componentKey"></webrtc>
-```
-
-#### 组件参数
-
-|  参数 | 类型 | 备注 |
-| --------- | ---- | ---- |
-| contact    | 对象 |   当前窗口的联系人   |
-| userInfo | 对象 |   当前登录用户   |
-| config    | 对象 |  peer的配置信息，用于点对点传输    |
-| alias    | 字符串 |   用于生成唯一通讯id的前缀   |
-
-#### 组件方法
-
-``` javascript
-//参数为true时表示视频通话，为false时为语音通话。
-this.$refs.webrtc.called(true);
-```
-#### 已知BUG
-1、由于浏览器限制，如果登录进聊天系统没有进行过交互，音视频通话无法播放响铃，导致通话无法正常进行。
-
 ### 安装部署服务
 
 服务器要求：
@@ -161,7 +112,7 @@ this.$refs.webrtc.called(true);
 请先认真查看本页文档，如果有什么问题，可以留言，有购买移动端需求可以加入我们的QQ群。
 
 【仅限有问题或者购买移动端需求才可以申请加入交流群（长时间不活跃的将被定期清理），加群前请先点Star，否则不予通过】
-
+ 
 [QQ 交流群：1031495465](https://qm.qq.com/q/RgHdvLGiMk)
 
 ### 部分截图
@@ -169,9 +120,9 @@ this.$refs.webrtc.called(true);
 
 ![语音视频消息卡片](src/assets/img/shipinxmsg.png)
 
-![音视频通话](src/assets/img/webrtccall.jpg)
+![音视频通话](src/assets/img/webrtccall.png)
 
-![音视频通话](src/assets/img/webrtc.jpg)
+![音视频通话](src/assets/img/webrtc.png)
 
 ![新朋友](src/assets/img/newfriend.png)
 
@@ -187,5 +138,49 @@ this.$refs.webrtc.called(true);
 
 ![群聊管理](src/assets/img/groups.png)
 
+![消息监控](src/assets/img/message.png)
+
 ![文件管理](src/assets/img/files.png)
 
+## 免责声明
+
+### 1. 基本声明
+
+本软件作为开源项目提供，在法律允许的最大范围内，开发者不对软件的功能性、安全性或适用性作出任何形式的保证，无论是明示的还是暗示的。
+
+### 2. 使用风险声明
+
+2.1 本软件按"现状"提供，使用者需自行承担使用本软件的全部风险。  
+2.2 开发者不对软件的运行可靠性、适用性或与特定需求的兼容性提供任何保证。  
+2.3 使用者应在充分评估风险的基础上决定是否使用本软件。
+
+### 3. 责任限制与豁免
+
+在任何情况下，开发者及其关联方均不对因使用或无法使用本软件而导致的任何损失或损害承担责任，包括但不限于：
+
+- 数据丢失或泄露
+- 利润损失
+- 系统中断
+- 商业机会损失
+- 其他直接、间接或衍生性损失
+
+### 4. 用户义务与责任
+
+4.1 使用者应确保其对本软件的使用符合所有适用的法律法规要求。  
+4.2 对本软件进行修改、分发或二次开发的使用者，需自行承担由此产生的全部责任，包括但不限于：
+
+- 法律风险
+- 知识产权风险
+- 安全风险
+- 数据保护责任
+
+### 5. 开发者权利
+
+5.1 开发者保留对本软件进行更新、修改、调整或停止维护的权利。  
+5.2 开发者可能在不事先通知的情况下修改本软件或相关服务。  
+5.3 开发者保留对本免责声明进行修改的权利。
+
+### 6. 其他条款
+
+6.1 本免责声明的任何部分被认定为无效或不可执行时，其余部分仍然有效。  
+6.2 本免责声明的最终解释权归开发者所有。
