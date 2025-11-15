@@ -14,6 +14,12 @@
 
     export default {
         name: "socket",
+        props:{
+            isCodeLogin:{
+                type:Boolean,
+                default:false
+            }
+        },
         data() {
             return {
                 is_open_socket:false,
@@ -59,11 +65,25 @@
                 switch (data['type']) {
                     // 服务端ping客户端
                     case 'ping':
-                        this.websocketSend({type:"pong"});
+                        this.websocketSend({type:"pong",is_codeLogin:this.isCodeLogin});
+                        break;
+                    case 'codeLoginQr':
+                        this.$store.state.qrCodeLogin=data['qrurl'];
+                        // 扫码登录
+                        break;
+                    case 'codeLoginSuccess':
+                        this.$store.commit('SET_AUTH', data)
+                        this.$store.commit('SET_USERINFO', data.userInfo)
+                        setTimeout(()=>{
+                             window.location.reload();
+                        },500)
                         break;
                     // 登录 更新用户列表
                     case 'init':
                         Lockr.set('client_id',data['client_id']);
+                        if(this.isCodeLogin){
+                            return;
+                        }
                         this.$api.commonApi.bindClientIdAPI({client_id: data['client_id'],user_id:userInfo.user_id}).then(res=>{
                             this.websocketSend({type:"bindUid",user_id:userInfo.user_id,token:token});
                             console.log(data['client_id'],'消息服务启动成功');

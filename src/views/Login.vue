@@ -1,64 +1,82 @@
 <template>
   <div class="login-wrapper" :style="'background-image:url('+ Background +')'">
     <div class="form-box">
-      <div class="form-title">
-        <img :src="globalConfig.sysInfo.logo ? globalConfig.sysInfo.logo : $packageData.logo" width="100" alt="icon">
-        <p class="mt-10 f-20">{{globalConfig.sysInfo.name}}</p>
+      <div class="qr-open lz-flex" :class="qrLogin ? '' : 'lz-justify-content-end'">
+        <div  @click="openQr()" v-if="!qrLogin" title="扫码登录">
+          <svg t="1763222030406" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2792" width="50" height="50"><path d="M92.16 92.16h276.48v275.626667h-0.853333L460.8 460.8V0H0l92.16 92.16z" p-id="2793" fill="#707070"></path><path d="M294.4 166.4H166.4l128 128zM1024 0H563.2v460.8h460.8V0z m-92.16 367.786667h-276.48V92.16h276.48v275.626667z" p-id="2794" fill="#707070"></path><path d="M729.6 166.4h128v128h-128zM1024 1024v-88.746667h-88.746667L1024 1024zM834.986667 756.053333v-100.266666H942.933333V563.2h-183.893333v96.853333h-98.986667l96 96zM655.36 563.2H563.2l92.16 92.16z" p-id="2795" fill="#707070"></path><path d="M1024 834.133333v-178.346666h-81.066667v100.266666h-107.946666v78.933334l79.786666 79.786666v-80.64z" p-id="2796" fill="#707070"></path></svg>
+        </div>
+        <div v-else   @click="qrLogin=false" class="f-18 c-666"><i class="el-icon el-icon-back"></i> 返回</div>
       </div>
-      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-width="0px" class="login-form">
-        <el-form-item prop="account">
-          <el-input ref="account" v-model="loginForm.account" type="text" auto-complete="off" placeholder="请输入账号" prefix-icon="el-icon-user" />
-        </el-form-item>
-        <el-form-item prop="password" v-show="!forget">
-          <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="请输入密码" prefix-icon="el-icon-lock" @keyup.enter.native="handleLogin" />
-        </el-form-item>
-        <el-form-item prop="code" v-show="forget">
-          <el-input
-              placeholder="请输入验证码"
-              maxlength="6"
-              v-model="loginForm.code">
-              <el-button slot="append" @click="sendCode()" :loading="coding">发送验证码</el-button>
-            </el-input>
-        </el-form-item>
-        <div class="c-666" style="font-size:12px;" v-if="globalConfig.demon_mode">演示账号：13800000002~13800000020，密码:123456</div>
-        <el-form-item>
-          <div class="remenber">
-            <el-checkbox v-model="loginForm.rememberMe">记住我</el-checkbox>
-            <el-button type="text" @click="forget=!forget">{{forget ? '密码登陆'  : '忘记密码'}}</el-button>
-          </div>
-          
-        </el-form-item>
-        <el-form-item>
-          <el-button :loading="loading" size="small" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
-            <span v-if="!loading">登 录</span>
-            <span v-else>登 录 中...</span>
+      <div v-if="qrLogin" class="mt-20 mb-20" style="text-align: center; margin-bottom: 15px;">
+        <vue-qr ref="qrCode" :text="qrCodeLogin" width="250" height="250"></vue-qr>
+        <div class="m-20 f-18">使用手机 {{globalConfig.sysInfo.name}} 扫码登录</div>
+      </div>
+      <template v-else>
+        <div class="form-title">
+          <img :src="globalConfig.sysInfo.logo ? globalConfig.sysInfo.logo : $packageData.logo" width="100" alt="icon">
+          <p class="mt-10 f-20">{{globalConfig.sysInfo.name}}</p>
+        </div>
+              
+        <el-form ref="loginForm" :model="loginForm" :rules="loginRules" label-width="0px" class="login-form pd-10">
+          <el-form-item prop="account">
+            <el-input ref="account" v-model="loginForm.account" type="text" auto-complete="off" placeholder="请输入账号" prefix-icon="el-icon-user" />
+          </el-form-item>
+          <el-form-item prop="password" v-show="!forget">
+            <el-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="请输入密码" prefix-icon="el-icon-lock" @keyup.enter.native="handleLogin" />
+          </el-form-item>
+          <el-form-item prop="code" v-show="forget">
+            <el-input
+                placeholder="请输入验证码"
+                maxlength="6"
+                v-model="loginForm.code">
+                <el-button slot="append" @click="sendCode()" :loading="coding">发送验证码</el-button>
+              </el-input>
+          </el-form-item>
+          <div class="c-666" style="font-size:12px;" v-if="globalConfig.demon_mode">演示账号：13800000002~13800000020，密码:123456</div>
+          <el-form-item>
+            <div class="remenber">
+              <el-checkbox v-model="loginForm.rememberMe">记住我</el-checkbox>
+              <el-button type="text" @click="forget=!forget">{{forget ? '密码登陆'  : '忘记密码'}}</el-button>
+            </div>
+            
+          </el-form-item>
+          <el-form-item>
+            <el-button :loading="loading" size="small" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
+              <span v-if="!loading">登 录</span>
+              <span v-else>登 录 中...</span>
+            </el-button>
+            
+          </el-form-item>
+          <el-form-item v-if="globalConfig.sysInfo.regtype==1">
+            <el-button size="small" style="width:100%;" plain @click="$router.push('/register')">
+              注册
+            </el-button>
+          </el-form-item>
+          <div align="center" class="c-999">{{globalConfig.sysInfo.name}} for {{$packageData.version}}</div>
+          <el-button  plain style="width:100%;" class="mt-10" @click="downapp()">
+              <span>下载客户端</span>
           </el-button>
-          
-        </el-form-item>
-        <el-form-item v-if="globalConfig.sysInfo.regtype==1">
-          <el-button size="small" style="width:100%;" plain @click="$router.push('/register')">
-            注册
-          </el-button>
-        </el-form-item>
-        <div align="center" class="c-999">{{globalConfig.sysInfo.name}} for {{$packageData.version}}</div>
-        <el-button  plain style="width:100%;" class="mt-10" @click="downapp()">
-            <span>下载客户端</span>
-         </el-button>
-      </el-form>
+        </el-form>
+      </template>
+      
     </div>
+      <Socket ref="socket" :isCodeLogin="true"></Socket>
   </div>
 </template>
 
 <script>
 import Background from '../assets/img/login-background.jpg'
+import Socket from "@/components/message/socket.vue";
 import { mapState } from 'vuex';
 import Lockr from 'lockr';
+import VueQr from 'vue-qr';
 export default {
   name: 'Login',
   data() {
     return {
       Background,
       forget:false,
+      qrLogin:false,
       loginForm: {
         account: '',
         password: '',
@@ -74,9 +92,14 @@ export default {
       redirect: undefined
     }
   },
+  components: {
+    VueQr,
+    Socket
+  },
   computed: {
     ...mapState({
-      globalConfig: state => state.globalConfig
+      globalConfig: state => state.globalConfig,
+      qrCodeLogin: state => state.qrCodeLogin
     })
   },
   watch: {
@@ -119,6 +142,10 @@ export default {
     })
   },
   methods: {
+    openQr(){
+      this.qrLogin=true;
+      this.$refs.socket.websocket.send(JSON.stringify({type:"pong",is_codeLogin:true}));
+    },
     handleLogin() {
       if(this.forget){
         if(!this.loginForm.code){
@@ -186,8 +213,8 @@ export default {
   height: 100vh;
   background-size: cover;
   .form-box {
-    width: 300px;
-    padding: 15px 30px 20px;
+    width: 320px;
+    padding: 20px;
     background: #fff;
     border-radius: 4px;
     box-shadow: 0 15px 30px 0 rgba(0, 0, 1, .1);
@@ -204,5 +231,8 @@ export default {
     justify-content: space-between;
     align-items: center;
   }
+}
+.qr-open{
+  cursor: pointer;
 }
 </style>
