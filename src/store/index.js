@@ -20,7 +20,7 @@ const state = {
     socketAction: '',
     contactSync: '',
     toContactId: 0,
-    qrCodeLogin:'', // 是否扫码登录
+    qrLoginUrl:'', // 是否扫码登录
     unread: 0,
     allContacts: [],
     globalConfig:[], // 全局配置

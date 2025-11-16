@@ -15,7 +15,7 @@
     export default {
         name: "socket",
         props:{
-            isCodeLogin:{
+            isQrLogin:{
                 type:Boolean,
                 default:false
             }
@@ -65,15 +65,16 @@
                 switch (data['type']) {
                     // 服务端ping客户端
                     case 'ping':
-                        this.websocketSend({type:"pong",is_codeLogin:this.isCodeLogin});
+                        this.websocketSend({type:"pong",isQrLogin:this.isQrLogin});
                         break;
                     case 'codeLoginQr':
-                        this.$store.state.qrCodeLogin=data['qrurl'];
+                        this.$store.state.qrLoginUrl=data['qrurl'];
                         // 扫码登录
                         break;
-                    case 'codeLoginSuccess':
-                        this.$store.commit('SET_AUTH', data)
-                        this.$store.commit('SET_USERINFO', data.userInfo)
+                    case 'tokenLogin':
+                        let info=data['data'];
+                        this.$store.commit('SET_AUTH', info)
+                        this.$store.commit('SET_USERINFO', info.userInfo)
                         setTimeout(()=>{
                              window.location.reload();
                         },500)
@@ -81,7 +82,7 @@
                     // 登录 更新用户列表
                     case 'init':
                         Lockr.set('client_id',data['client_id']);
-                        if(this.isCodeLogin){
+                        if(this.isQrLogin){
                             return;
                         }
                         this.$api.commonApi.bindClientIdAPI({client_id: data['client_id'],user_id:userInfo.user_id}).then(res=>{
