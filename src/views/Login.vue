@@ -218,7 +218,7 @@ export default {
     padding: 20px;
     background: #fff;
     border-radius: 4px;
-    box-shadow: 0 15px 30px 0 rgba(0, 0, 1, .1);
+    box-shadow: 0 15px 30px 0 rgba(0, 0, 1, .3);
     .form-title {
       margin: 30px auto 20px;
       text-align: center;

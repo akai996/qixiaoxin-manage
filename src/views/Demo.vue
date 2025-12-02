@@ -1,5 +1,8 @@
 <template>
+  <div class="main-body">
   <div class="main-container">
+    <el-scrollbar>
+      <div  style="padding-right:20px">
     <div class="im-title">
       <div class="logo">
         <el-image style="width: 80px; height: 80px" :src="$packageData.logo" fit="cover"> </el-image>
@@ -31,6 +34,9 @@
             target="_blank">QQ交流群:1031495465</a></el-button>
       </div>
     </div>
+    <div class="tip mb-20 mt-10 lz-flex lz-align-items-center">
+      <div>产品介绍官网《书瑜网》已经正式上线，专注于技术分享！&nbsp;</div> <el-link @click="openWeb()" type="primary">去看看</el-link>
+    </div>
 
     <el-alert
     class="mt-15 mb-15"
@@ -53,18 +59,18 @@
         title="免责声明：请勿将源码用于木马、病毒、色情、赌博、诈骗等违反国家法律法规行业，如有发现我会协助相关行政执法机关清查！"
         type="error">
       </el-alert>
-  <el-tabs v-model="activeName" type="card" @tab-click="handleClick" class="mb-20"> 
-    <el-tab-pane label="📘 程序介绍">
+  <el-tabs v-model="activeName"  type="border-card" @tab-click="handleClick" class="mb-20"> 
+    <el-tab-pane label="📘 程序介绍"  name="first">
       <div class="tip">
           <p class="mb-5" v-for="(item,index) in introduce" :key="index"><i :class="item.icon"></i> <span v-html="item.text"></span></p>
       </div>
     </el-tab-pane>
-    <el-tab-pane label="🪄 支持功能">
+    <el-tab-pane label="🪄 支持功能"  name="second">
       <div class="success">
         <p class="mb-5"  v-for="(item,index) in $packageData.funcList" :key="index"><i :class="item.icon"></i>  <span v-html="item.text"></span></p>
       </div>
     </el-tab-pane>
-    <el-tab-pane label="🛒 技术栈">
+    <el-tab-pane label="🛒 技术栈"  name="third">
       <div class="info">
           <p class="mb-5"  v-for="(item,index) in techStack"   :key="index"><i :class="item.icon"></i> <span v-html="item.text"></span></p>
       </div>
@@ -163,7 +169,11 @@
       </div>
     </div>
 
-    <Message ref="Message" :dialogTableVisible.sync="dialogTableVisible"></Message>
+    
+    </div>
+    </el-scrollbar>
+  </div>
+  <Message ref="Message" :dialogTableVisible.sync="dialogTableVisible"></Message>
   </div>
 </template>
 
@@ -180,7 +190,7 @@ export default {
       dialogTableVisible: false, //消息弹窗是否显示
       unread: 0,
       allContacts: [],
-      activeName: '0',
+      activeName: 'first',
       techStack: [
         {
           icon: 'el-icon-cpu',
@@ -238,9 +248,30 @@ export default {
       this.allContacts = val;
     },
   },
+  created() {
+    this.$notify({
+        title: '温馨提醒',
+        type: 'warning',
+        duration:0,
+        dangerouslyUseHTMLString: true,
+        message: '<span style="cursor:pointer">加交流前请先点star，否则不予通过，长时间不活跃的将被定期清理，<b style="color:blue">点我去star</b>!</span>',
+        onClick: () => {
+          window.open(this.$packageData.backstageUrl);
+        },
+      });
+    this.$notify({
+        title: '温馨提醒',
+        type: 'success',
+        duration:0,
+        dangerouslyUseHTMLString: true,
+        message: '作者QQ：1072129059 （添加作者咨询，需要购买才加，否则不予通过，源码预算600及以上，安装部署指导预算200及以上）',
+        offset:120
+      });
+  },
   methods: {
     handleClick(tab, event) {
-      console.log(tab, event);
+      console.log(tab.name);
+      this.activeName=tab.name;
     },
     showMessageBox() {
       this.dialogTableVisible
@@ -253,14 +284,28 @@ export default {
     },
     downApp(){
       window.open(window.BASE_URL + 'downapp');
+    },
+    openWeb(){
+      window.location.href='https://www.shooyu.cn';
     }
   },
 };
 </script>
 <style scoped lang="scss">
 .main-container {
-  padding: 50px 10%;
-
+  padding:20px 0 20px 20px;
+  width:900px;
+  margin:20px auto;
+  height:calc(100vh - 82px);
+  overflow-y: auto;
+    /* 核心毛玻璃属性 */
+  background: rgba(255, 255, 255, 0.5); /* 半透明白色背景 */
+  backdrop-filter: blur(8px); /* 模糊强度（数值越大越模糊） */
+  
+  /* 优化细节 */
+  border: 1px solid rgba(255, 255, 255, 0.18); /* 浅色细边框 */
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15); /* 柔和阴影 */
+  border-radius: 16px; /* 圆角增强质感 */
   .im-title {
     display: flex;
     align-items: center;
@@ -284,7 +329,7 @@ export default {
 
       .im-des {
         font-size: 18px;
-        color: #999;
+        color: #333;
         margin-bottom: 10px;
       }
     }
@@ -389,9 +434,11 @@ export default {
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 900px) {
   .main-container{
     padding: 15px;
+    width:90%;
+    margin:15px auto;
   }
 }
 ::v-deep .el-tooltip__popper{
@@ -403,5 +450,16 @@ export default {
 .el-image {
   overflow: inherit;
 }
+
+.main-body {
+  margin: 0;
+  min-height: 100vh;
+  background: url("https://localhost:3001/assets/img/login-background.bfc13145.jpg") no-repeat center;
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 </style>
