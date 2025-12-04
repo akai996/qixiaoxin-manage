@@ -1,5 +1,5 @@
 <template>
-  <div class="main-body">
+  <div class="main-body" :style="'background-image:url('+ Background +')'">
   <div class="main-container">
     <el-scrollbar>
       <div  style="padding-right:20px">
@@ -162,7 +162,7 @@
         <el-link type="primary" href="https://lemon.raingad.com">Lemon-IMUI使用文档</el-link>
       </div>
       <div class="mb-15">
-        <el-link type="primary" href="https://www.npmjs.com/package/chatarea">聊天输入框插件【chatarea】</el-link>
+        <el-link type="primary" href="https://jianfv.top/ChatAreaDoc/home">聊天输入框插件【chatarea】</el-link>
       </div>
       <div class="mb-15">
         <el-link type="primary" href="https://blog.csdn.net/ruiye99/article/details/130992960">WebRTC 网络中继 Coturn 服务安装及部署</el-link>
@@ -178,6 +178,7 @@
 </template>
 
 <script>
+import Background from '../assets/img/login-background.jpg'
 import { mapGetters, mapMutations, mapState } from "vuex";
 import Message from "@/views/message/Index"; //临时位置
 export default {
@@ -187,6 +188,7 @@ export default {
   },
   data() {
     return {
+      Background,
       dialogTableVisible: false, //消息弹窗是否显示
       unread: 0,
       allContacts: [],
@@ -454,7 +456,6 @@ export default {
 .main-body {
   margin: 0;
   min-height: 100vh;
-  background: url("https://localhost:3001/assets/img/login-background.bfc13145.jpg") no-repeat center;
   background-size: cover;
   display: flex;
   align-items: center;

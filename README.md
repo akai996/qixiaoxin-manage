@@ -5,6 +5,7 @@ Raingad-IM是一个开源的即时通信demo，需要前后端配合使用，主
 
 |  类型 | 链接 |备注|
 | --------- | ---- |---- |
+| 技术分享站上线（官网）    | https://www.shooyu.cn | 书瑜网 |
 | 前端源码（含后台管理）    | https://gitee.com/raingad/im-chat-front | 只维护后台管理 |
 | 后端源码（已编译前端） | https://gitee.com/raingad/im-instant-chat |  |
 | web端演示 | http://im.raingad.com/index.html |  |
