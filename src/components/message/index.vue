@@ -229,12 +229,19 @@
                     ></span>
                   </div>
                 </div>
+                <el-input
+                  v-model="groupUserKeyword"
+                  placeholder="搜索群成员"
+                  size="small"
+                  clearable
+                  style="margin: 10px 0;"
+                ></el-input>
                 <hr/>
-                <div class="group-user-body" :style="[{height:'calc(' + curHeight + ' - 230px)',background:(setting.theme=='blue') ? '#ffffff' : '#f4f4f4'}]"  id="group-user">
+                <div class="group-user-body" :style="[{height:'calc(' + curHeight + ' - 260px)',background:(setting.theme=='blue') ? '#ffffff' : '#f4f4f4'}]"  id="group-user">
                   <el-scrollbar style="height:100%;">
                     <lemon-contact
                       class="user-list"
-                      v-for="(item, index) in groupUser"
+                      v-for="(item, index) in filteredGroupUser"
                       :key="index"
                       :contact="item"
                       v-lemon-contextmenu.contact="groupMenu"
@@ -506,6 +513,7 @@ export default {
       contacts: [],
       allUser: [],
       groupUser: [],
+      groupUserKeyword: '',
       // 当前聊天
       currentChat: {},
       // 当前消息
@@ -1077,6 +1085,14 @@ export default {
       return function(val) {
         return utils.timeFormat(val);
       };
+    },
+    filteredGroupUser() {
+      if (!this.groupUserKeyword) {
+        return this.groupUser;
+      }
+      return this.groupUser.filter(item => 
+        item.userInfo.displayName.toLowerCase().includes(this.groupUserKeyword.toLowerCase())
+      );
     },
   },
   watch: {
@@ -2183,9 +2199,9 @@ export default {
     },
     // 转发消息
     forwardUser(userIds) {
-      if (userIds.length > 5) {
-        return this.$message.error("转发的人数不能超过5人！");
-      }
+      // if (userIds.length > 50) {
+      //   return this.$message.error("转发的人数不能超过50人！");
+      // }
       this.forwardBox = false;
       var message = this.currentMessage;
       this.$api.imApi.forwardMessageAPI({user_ids:userIds,msg_id:message.msg_id});

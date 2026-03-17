@@ -181,9 +181,9 @@ import * as utils from '@/utils/index';
         },
         // 发送到聊天
         sendChat(userIds){
-            if (userIds.length > 5) {
-                return this.$message.error("转发的人数不能超过5人！");
-            }
+            // if (userIds.length > 50) {
+            //     return this.$message.error("转发的人数不能超过50人！");
+            // }
             let user= this.$store.state.userInfo;
             this.forwardBox = false;
             let msg = {

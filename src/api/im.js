@@ -421,4 +421,17 @@ imApi.contactInfo= (data)  =>{
         data: data
     })
 }
+
+// 黎明开始
+// 上传头像
+imApi.updateAvatar= (data)  =>{
+    return request({
+        url: 'enterprise/group/updateAvatar',
+        method: 'post',
+        data: data
+    })
+}
+
+
+
 export default imApi;

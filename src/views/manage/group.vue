@@ -56,6 +56,9 @@
                             <el-button plain round @click="openAddUser">添加成员</el-button>
                             <el-button type="warning" plain round @click="openMessageBox">群聊监控</el-button>
                             <el-button type="danger" plain round @click="delGroup">解散群聊</el-button>
+                             <!-- 黎明 添加修改群头像  -->
+                            <el-button type="primary" plain round @click="updataAvatar">修改头像</el-button>
+
                         </div>
                     </div>
                     <div class="group-box-list">
@@ -105,6 +108,26 @@
             >
             <ChatRecord :contact="currentChat" :key="componentKey"></ChatRecord>
         </el-dialog>
+        <!-- 修改群头像 -->
+        <el-dialog title="修改群头像" :visible.sync="avatarDialog" width="400px" append-to-body>
+            <el-upload
+                class="avatar-uploader"
+                :headers="getToken()"
+                :action="getUrl()"
+                :show-file-list="false"
+                :on-success="uploadSuccess"
+                :before-upload="beforeAvatarUpload"
+                accept="image/*"
+            >
+                <img v-if="avatarUrl" :src="avatarUrl" class="avatar">
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2MB</div>
+            </el-upload>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="avatarDialog = false">取消</el-button>
+                <el-button type="primary" @click="confirmUpdateAvatar">确定</el-button>
+            </span>
+        </el-dialog>
     </div>
 
 </template>
@@ -122,6 +145,8 @@
       return {
         componentKey:99,
         messageBox:false,
+        avatarDialog: false,
+        avatarUrl: '',
         isAdd: true,
         dialogTitle: '创建群聊',
         createChatBox:false,
@@ -155,6 +180,49 @@
             item.is_group=1;
             this.currentChat = item;
             this.getGroupUser(item.group_id);
+        },
+        updataAvatar(){
+            if (this.active == 0) {
+                this.$message.warning('请选择群聊');
+                return;
+            }
+            this.avatarDialog = true;
+        },
+        getToken() {
+            const authKey = this.$store.state.authToken || localStorage.getItem('authToken');
+            return { Authorization: authKey };
+        },
+        getUrl() {
+            return window.BASE_URL + '/common/upload/uploadImage';
+        },
+        uploadSuccess(res, file) {
+            this.avatarUrl = res.data;
+        },
+        beforeAvatarUpload(file) {
+            const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+            if (!isJPG) {
+                this.$message.error('上传头像图片只能是 JPG 或 PNG 格式!');
+            }
+            if (!isLt2M) {
+                this.$message.error('上传头像图片大小不能超过 2MB!');
+            }
+            return isJPG && isLt2M;
+        },
+        confirmUpdateAvatar() {
+            if (!this.avatarUrl) {
+                this.$message.warning('请先上传图片');
+                return;
+            }
+            console.log(this.avatarUrl);
+            this.$api.imApi.updateAvatar({ group_id: this.active, avatar: this.avatarUrl }).then(res => {
+                if (res.code == 0) {
+                    this.$message.success('修改成功');
+                    this.avatarDialog = false;
+                    this.avatarUrl = '';
+                    this.getGroupList();
+                }
+            });
         },
         getGroupList(){
             this.$api.groupApi.getGroupList(this.params).then(res=>{
@@ -390,5 +458,29 @@
 ::v-deep .el-card__body{
     padding: 0 !important;
 }
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+.avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+}
+.avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+}
+.avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+}
+
 </style>
   

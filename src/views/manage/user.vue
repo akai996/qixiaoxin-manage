@@ -3,6 +3,7 @@
       <div class="mb-15 lz-flex lz-space-between">
          <div>
             <el-button class="mr-15" @click="addUser">添加成员</el-button>
+            <el-button class="mr-15" @click="addUsers">生成10位成员</el-button>
          </div>
          <!-- 搜索 -->
          <div>
@@ -110,7 +111,7 @@
          </el-table-column>
          <el-table-column
             prop="remark"
-            label="备注"
+            label="邀请码备注"
             min-width="300">
          </el-table-column>
          <el-table-column
@@ -209,7 +210,7 @@
                 <el-input-number class="ml-10" v-model="detail.group_limit" :min="0" :max="1000"></el-input-number>
                 <span class="ml-10 c-999 f-12">个，0表示不限制-1表示禁止创建</span>
               </el-form-item>
-              <el-form-item label="备注" prop="remark">
+              <el-form-item label="邀请码备注" prop="remark">
                <el-input type="textarea" :rows="2" v-model="detail.remark"></el-input>
               </el-form-item>
               <el-form-item>
@@ -384,6 +385,18 @@
          this.formTitle = "添加成员";
          this.formType = "add";
          this.dialogVisible = true;
+      },
+      // 黎明 后台增加一个批量生成账号
+      addUsers(){
+         this.$api.userApi.addUsers().then(res=>{
+            if(res.code==0){
+               this.getUserList();
+               this.$message({
+                  message: res.msg,
+                  type: 'success'
+               });
+            }
+         })
       },
       // 修改成员
       editUser(item){

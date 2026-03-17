@@ -129,6 +129,13 @@
                       <span class="ml-10 c-999 f-12">系统在每日凌晨2点自动清理该天数以前的消息</span>
                   </div>
               </el-form-item>
+
+              <!-- 黎明 -->
+              <el-form-item label="自动添加好友"  prop="autoAddFriend">
+                  <el-switch v-model="chatInfo.autoAddFriend" active-value="1" inactive-value="0"></el-switch>
+                  <span class="ml-10 c-999 f-12">开启后，添加好友无需对方手动验证</span>
+              </el-form-item>
+
               <el-form-item label="自动添加客服" prop="autoAddUser">
                 <el-switch v-model="chatInfo.autoAddUser.status" active-value="1" inactive-value="0"></el-switch>
                 <span class="ml-10 c-999 f-12">开启后，用户注册之后自动设置为专属客服。</span>
@@ -441,6 +448,7 @@ export default {
           sendInterval:'',
           redoTime:120,
           dbDelMsg:false,
+          autoAddFriend: true,
           autoAddGroup:{
             status:0,
             userMax:'',

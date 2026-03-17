@@ -76,5 +76,14 @@ userApi.setRole = (data) => {
     });
 };
 
+// 黎明 后台增加一个批量生成账号
+userApi.addUsers = (data) => {
+    return request({
+        url: "/manage/User/adds",
+        method: "post",
+        data: data,
+    });
+};
+
 
 export default userApi;

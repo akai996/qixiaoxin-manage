@@ -125,10 +125,17 @@
         },
         // 添加好友
         addFriend(){
-          this.closeDialog();
+          this.closeDialog(); 
+          this.$api.friendApi.addFriend({user_id:this.detail.user_id,remark:'您好！'}).then(res=>{
+              if(res.code == 0){
+                this.$message.success(res.msg);
+              }
+          })
+          /*  
           this.$prompt('请填写验证信息，让朋友知道你！', '添加好友', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
+            inputValue: '我是张三，很高兴认识你！', // 添加默认值
           }).then(({ value }) => {
             if(!value){
               this.$message.error('请输入验证信息');
@@ -145,7 +152,7 @@
               message: error
             });       
           });
-          
+          */
         },
         // 设置备注
         setNickname(){

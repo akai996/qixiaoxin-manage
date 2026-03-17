@@ -53,6 +53,7 @@
     "axios": "^0.21.4",
     "core-js": "^3.8.3",
     "cropperjs": "^1.5.13",
+    "crypto-js": "^4.2.0",
     "element-ui": "^2.15.13",
     "js-audio-recorder": "^1.0.7",
     "js-web-screen-shot": "^1.9.8-rc.3",

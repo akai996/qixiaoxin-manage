@@ -10,6 +10,7 @@ import qs from 'qs'
 import { debounce } from 'throttle-debounce'
 import router from '../router'
 import Lockr from 'lockr'
+import CryptoJS from 'crypto-js'
 
 /**
  * 检查dom是否忽略
@@ -50,6 +51,16 @@ const service = axios.create({
     baseURL: apiUrl, // api 的 base_url
     timeout: 60000 // 请求超时时间
 })
+// 生成接口签名：用用户 authToken 作为 HMAC-SHA256 密钥
+const generateSign = (token) => {
+    const timestamp = Math.floor(Date.now() / 1000).toString();
+    if (!token) {
+        return { timestamp, sign: '' };
+    }
+    const sign = CryptoJS.HmacSHA256(timestamp, token).toString();
+    return { timestamp, sign };
+}
+
 // request拦截器
 service.interceptors.request.use(
     config => {
@@ -58,6 +69,12 @@ service.interceptors.request.use(
         if (sessionId && authToken) {
             config.headers['sessionId'] = sessionId;
             config.headers['Authorization'] = authToken;
+            // 附加签名 headers
+            const { timestamp, sign } = generateSign(authToken);
+            if (sign) {
+                config.headers['X-Im-TimeStamp'] = timestamp;
+                config.headers['X-Im-Sign'] = sign;
+            }
         }
         const flag = config.headers['Content-Type'] && config.headers['Content-Type'].indexOf('application/json') !== -1
         if (!flag) {
