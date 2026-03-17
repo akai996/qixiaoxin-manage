@@ -45,7 +45,8 @@ const confirmMessage = debounce(1000, (message) => {
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 
-const apiUrl= window.location.protocol+'//'+ (process.env.NODE_ENV === 'production' ? window.location.host + '/' : process.env.VUE_APP_BASE_API);
+let apiUrl= window.location.protocol+'//'+ (process.env.NODE_ENV === 'production' ? window.location.host + '/' : process.env.VUE_APP_BASE_API);
+apiUrl = `${apiUrl}/api`
 window.BASE_URL = apiUrl;
 const service = axios.create({
     baseURL: apiUrl, // api 的 base_url
