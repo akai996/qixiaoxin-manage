@@ -44,7 +44,7 @@
                 if(protocol=="https:"){
                     wsProtocol="wss://";
                 }
-                const WS_URI=wsProtocol+ws_host+"/wss";
+                const WS_URI=wsProtocol+ws_host+"/k7m2x9/wss";
                 return WS_URI;
             },
             initWebSocket() { //初始化weosocket
