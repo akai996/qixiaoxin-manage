@@ -129,6 +129,10 @@
           this.$api.friendApi.addFriend({user_id:this.detail.user_id,remark:'您好！'}).then(res=>{
               if(res.code == 0){
                 this.$message.success(res.msg);
+                // 自动添加好友成功，通知父组件跳转到聊天窗口
+                if(res.data && res.data.action === 'added'){
+                  this.$emit('friendAdded', this.detail.user_id);
+                }
               }
           })
           /*  

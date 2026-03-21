@@ -1907,6 +1907,10 @@ export default {
         })
         this.setLocalMsgIsRead(data);
       }
+      // 单聊：同步我发出的消息的已读状态（对方可能已阅读，但前端缓存未更新）
+      if (contact.is_group == 0 && messages.length > 0) {
+        this.syncMyMsgReadStatus(contact, messages);
+      }
       instance.closeDrawer();
     },
     // 设置@的群成员
@@ -2270,6 +2274,40 @@ export default {
           this.keywords
         );
       }
+    },
+    // 单聊切换窗口时，同步我发出消息的已读状态
+    syncMyMsgReadStatus(contact, localMessages) {
+      // 筛选出我发的、未读的消息
+      const myUnreadMsgs = localMessages.filter(
+        item => item.fromUser && item.fromUser.id == this.user.id && item.is_read == 0
+      );
+      if (myUnreadMsgs.length === 0) return;
+      // 向服务端拉取最新一页消息，对比已读状态
+      this.$api.imApi.getMessageListAPI({
+        toContactId: contact.id,
+        is_group: 0,
+        page: 1,
+        limit: 50,
+        last_id: 0
+      }).then(res => {
+        const { IMUI } = this.$refs;
+        const serverMsgs = res.data || [];
+        // 以 id 为 key 建立索引
+        const serverMap = {};
+        serverMsgs.forEach(msg => { serverMap[msg.id] = msg; });
+        myUnreadMsgs.forEach(localMsg => {
+          const serverMsg = serverMap[localMsg.id];
+          if (serverMsg && serverMsg.is_read == 1) {
+            IMUI.updateMessage({
+              id: localMsg.id,
+              is_read: 1,
+              status: "succeed",
+              sendTime: parseInt(localMsg.sendTime) + 1,
+              content: localMsg.content
+            });
+          }
+        });
+      }).catch(() => {});
     },
     // 将本地消息设置为已读
     setLocalMsgIsRead(message) {
